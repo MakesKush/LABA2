@@ -49,12 +49,12 @@ python lab2.py
 
 `01_original_gray.bmp`
 
-![01_original_gray.bmp](01_original_gray.bmp)
+![01_original_gray.bmp](output_images/01_original_gray.bmp)
 
 `01_original_binary.png`
 
-![01_original_binary.png](01_original_binary.png)
+![01_original_binary.png](output_images/01_original_binary.png)
 
 `01_original_result.png`
 
-![01_original_result.png](01_original_result.png)
+![01_original_result.png](output_images/01_original_result.png)
