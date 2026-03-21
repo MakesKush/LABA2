@@ -1,21 +1,16 @@
 # Лабораторная работа 2. Бинаризация
 
 ## Что делает программа
-Скрипт:
+
 1. Берёт цветные изображения из папки `input_images`
 2. Переводит их в полутоновое изображение вручную
 3. Выполняет бинаризацию
 4. Сохраняет результаты в папку `output_images`
 
 ## Как подготовить проект
-Рядом со скриптом `lab2_variant11_clean.py` должны быть папки и файлы:
+Рядом с `lab2.py` должны быть папки и файлы:
 
-```text
-project/
-├── lab2_variant11_clean.py
-├── input_images/
-└── output_images/   # появится после запуска
-```
+
 
 В папку `input_images` нужно положить исходные цветные изображения формата:
 - `.png`
@@ -23,35 +18,24 @@ project/
 
 Пример:
 
-```text
-input_images/
-    01_original.png
-    02_image.bmp
-    03_photo.png
-```
 
-## Установка библиотек
-Открой терминал в папке проекта и выполни:
-
-```bash
-pip install pillow numpy
-```
+![01_original.png](input_images/01_original.png)
 
 ## Запуск
 Запуск из терминала:
 
 ```bash
-python lab2_variant11_clean.py
+python lab2.py
 ```
 
 Если используется виртуальное окружение:
 
 ```bash
 source .venv/bin/activate
-python lab2_variant11_clean.py
+python lab2.py
 ```
 
-## Что будет в результате
+## Результате
 После запуска в папке `output_images` для каждого входного изображения появятся 3 файла:
 
 - `имя_файла_gray.bmp` — полутоновое изображение
@@ -63,18 +47,14 @@ python lab2_variant11_clean.py
 
 Пример:
 
-```text
-output_images/
-    01_original_gray.bmp
-    01_original_binary.png
-    01_original_result.png
-```
+`01_original_gray.bmp`
 
-## Важный момент
-Если папки `input_images` нет, скрипт создаст её и завершится.
-В этом случае нужно:
-1. положить изображения в `input_images`
-2. запустить скрипт ещё раз
+![01_original_gray.bmp](output_images/01_original_gray.bmp)
 
-## По результату
-Для фотографий со сложным фоном бинаризация может давать в основном контуры и слабое выделение объектов — это нормально. На изображениях с текстом, документами и более контрастными областями результат обычно выглядит лучше.
+`01_original_binary.png`
+
+![01_original_binary.png](output_images/01_original_binary.png)
+
+`01_original_result.png`
+
+![01_original_result.png](output_images/01_original_result.png)
