@@ -63,23 +63,25 @@ python lab2.py
 Пример:
 1.1 `01_original_gray.bmp`
 
-![01_original_gray.bmp](output_images/01_original_gray.bmp)
+![01_original_gray.bmp](01_original_gray.bmp)
 
-2.1 `zhest_01_gray.bmp`![zhest_01_gray.bmp](output_images/zhest_01_gray.bmp)
+2.1 `zhest_01_gray.bmp`
+
+![zhest_01_gray.bmp](zhest_01_gray.bmp)
 
 
 1.2 `01_original_binary.png`
 
-![01_original_binary.png](output_images/01_original_binary.png)
+![01_original_binary.png](01_original_binary.png)
 
 2.2 `zhest_01_binary.png`
 
-![zhest_01_binary.png](output_images/zhest_01_binary.png)
+![zhest_01_binary.png](zhest_01_binary.png)
 
 1.3 `01_original_result.png`
 
-![01_original_result.png](output_images/01_original_result.png)
+![01_original_result.png](01_original_result.png)
 
 2.3 `zhest_01_result.png`
 
-![zhest_01_result.png](output_images/zhest_01_result.png)
+![zhest_01_result.png](zhest_01_result.png)
