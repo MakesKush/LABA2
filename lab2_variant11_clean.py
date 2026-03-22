@@ -1,5 +1,7 @@
 import os
+from io import BytesIO
 
+import requests
 import numpy as np
 from PIL import Image
 
@@ -7,12 +9,37 @@ input_dir = 'input_images'
 output_dir = 'output_images'
 allowed = {'.bmp', '.png'}
 
+origin = "https://www.slavcorpora.ru"
+sample_id = "b008ae91-32cf-4d7d-84e4-996144e4edb7"
+
 w1 = 3
 w2 = 15
 alpha1 = 0.12
 k1 = 0.20
 k2 = 0.03
 gamma = 2.0
+
+
+def download_zhest_sample():
+    os.makedirs(input_dir, exist_ok=True)
+
+    sample = requests.get(f"{origin}/api/samples/{sample_id}", timeout=30)
+    sample.raise_for_status()
+    sample = sample.json()
+
+    for i, page in enumerate(sample["pages"], start=1):
+        filename = f"zhest_{i:02d}.png"
+        save_path = os.path.join(input_dir, filename)
+
+        if os.path.exists(save_path):
+            continue
+
+        url = f"{origin}/images/{page['filename']}"
+        r = requests.get(url, timeout=30)
+        r.raise_for_status()
+
+        img = Image.open(BytesIO(r.content)).convert('RGB')
+        img.save(save_path)
 
 
 def odd(x):
@@ -80,7 +107,7 @@ def binarize(gray):
             s = np.sqrt(var)
 
             reg1 = a[t1:b1, l1:r1]
-            M = float(reg1.min())
+            m_min = float(reg1.min())
 
             t2 = y
             l2 = x
@@ -88,17 +115,17 @@ def binarize(gray):
             r2 = x + w2
             reg2 = b[t2:b2, l2:r2]
 
-            R = float(reg2.max()) - float(reg2.min())
+            r_range = float(reg2.max()) - float(reg2.min())
 
-            if R <= 1e-9:
-                T = m
+            if r_range <= 1e-9:
+                t = m
             else:
-                ratio = s / R
+                ratio = s / r_range
                 a2 = k1 * (ratio ** gamma)
                 a3 = k2 * (ratio ** gamma)
-                T = (1 - alpha1) * m + a2 * ratio * (m - M) + a3 * M
+                t = (1 - alpha1) * m + a2 * ratio * (m - m_min) + a3 * m_min
 
-            out[y, x] = 255 if gray_f[y, x] > T else 0
+            out[y, x] = 255 if gray_f[y, x] > t else 0
 
     return out
 
@@ -115,11 +142,10 @@ def save_img(arr, path):
 
 
 def main():
-    if not os.path.exists(input_dir):
-        os.makedirs(input_dir, exist_ok=True)
-        return
-
+    os.makedirs(input_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
+
+    download_zhest_sample()
 
     files = []
     for name in sorted(os.listdir(input_dir)):
