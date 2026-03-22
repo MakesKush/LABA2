@@ -73,6 +73,7 @@ python lab2.py
 ![01_original_binary.png](output_images/01_original_binary.png)
 
 2.2 `zhest_01_binary.png`
+
 ![zhest_01_binary.png](output_images/zhest_01_binary.png)
 
 1.3 `01_original_result.png`
