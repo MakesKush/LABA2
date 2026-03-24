@@ -1,7 +1,5 @@
 import os
-from io import BytesIO
 
-import requests
 import numpy as np
 from PIL import Image
 
@@ -9,47 +7,14 @@ input_dir = 'input_images'
 output_dir = 'output_images'
 allowed = {'.bmp', '.png'}
 
-origin = "https://www.slavcorpora.ru"
-sample_id = "b008ae91-32cf-4d7d-84e4-996144e4edb7"
-
-w1 = 3
-w2 = 15
 alpha1 = 0.12
 k1 = 0.20
 k2 = 0.03
 gamma = 2.0
 
 
-def download_zhest_sample():
-    os.makedirs(input_dir, exist_ok=True)
-
-    sample = requests.get(f"{origin}/api/samples/{sample_id}", timeout=30)
-    sample.raise_for_status()
-    sample = sample.json()
-
-    for i, page in enumerate(sample["pages"], start=1):
-        filename = f"zhest_{i:02d}.png"
-        save_path = os.path.join(input_dir, filename)
-
-        if os.path.exists(save_path):
-            continue
-
-        url = f"{origin}/images/{page['filename']}"
-        r = requests.get(url, timeout=30)
-        r.raise_for_status()
-
-        img = Image.open(BytesIO(r.content)).convert('RGB')
-        img.save(save_path)
-
-
 def odd(x):
     return x if x % 2 == 1 else x + 1
-
-
-w1 = odd(w1)
-w2 = odd(w2)
-if w2 < w1:
-    w2 = odd(w1 + 2)
 
 
 def load_image(path):
@@ -74,12 +39,18 @@ def area_sum(s, top, left, bottom, right):
     return s[bottom, right] - s[top, right] - s[bottom, left] + s[top, left]
 
 
-def binarize(gray):
+def binarize(gray, w_local, w_range):
+    w_local = odd(w_local)
+    w_range = odd(w_range)
+
+    if w_range < w_local:
+        w_range = w_local
+
     h, w = gray.shape
     gray_f = gray.astype(np.float64)
 
-    p1 = w1 // 2
-    p2 = w2 // 2
+    p1 = w_local // 2
+    p2 = w_range // 2
 
     a = np.pad(gray_f, p1, mode='edge')
     b = np.pad(gray_f, p2, mode='edge')
@@ -88,14 +59,14 @@ def binarize(gray):
     s2 = integral(a * a)
 
     out = np.zeros((h, w), dtype=np.uint8)
-    area = w1 * w1
+    area = w_local * w_local
 
     for y in range(h):
         for x in range(w):
             t1 = y
             l1 = x
-            b1 = y + w1
-            r1 = x + w1
+            b1 = y + w_local
+            r1 = x + w_local
 
             sm = area_sum(s1, t1, l1, b1, r1)
             sq = area_sum(s2, t1, l1, b1, r1)
@@ -111,8 +82,8 @@ def binarize(gray):
 
             t2 = y
             l2 = x
-            b2 = y + w2
-            r2 = x + w2
+            b2 = y + w_range
+            r2 = x + w_range
             reg2 = b[t2:b2, l2:r2]
 
             r_range = float(reg2.max()) - float(reg2.min())
@@ -130,6 +101,10 @@ def binarize(gray):
     return out
 
 
+def save_img(arr, path):
+    Image.fromarray(arr).save(path)
+
+
 def save_strip(rgb, gray, binary, path):
     gray_rgb = np.stack([gray, gray, gray], axis=2)
     binary_rgb = np.stack([binary, binary, binary], axis=2)
@@ -137,15 +112,9 @@ def save_strip(rgb, gray, binary, path):
     Image.fromarray(strip).save(path)
 
 
-def save_img(arr, path):
-    Image.fromarray(arr).save(path)
-
-
 def main():
     os.makedirs(input_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
-
-    download_zhest_sample()
 
     files = []
     for name in sorted(os.listdir(input_dir)):
@@ -157,12 +126,18 @@ def main():
     for path in files:
         img = load_image(path)
         gray = to_gray(img)
-        binary = binarize(gray)
+
+        binary_3 = binarize(gray, 3, 25)
+        binary_25 = binarize(gray, 25, 25)
 
         base = os.path.splitext(os.path.basename(path))[0]
+
         save_img(gray, os.path.join(output_dir, base + '_gray.bmp'))
-        save_img(binary, os.path.join(output_dir, base + '_binary.png'))
-        save_strip(img, gray, binary, os.path.join(output_dir, base + '_result.png'))
+        save_img(binary_3, os.path.join(output_dir, base + '_binary_3x3.png'))
+        save_img(binary_25, os.path.join(output_dir, base + '_binary_25x25.png'))
+
+        save_strip(img, gray, binary_3, os.path.join(output_dir, base + '_result_3x3.png'))
+        save_strip(img, gray, binary_25, os.path.join(output_dir, base + '_result_25x25.png'))
 
     print('done')
 
