@@ -74,11 +74,11 @@ python lab2.py
 
 3х3
 
-![01_original_binary_3x3.png](output_images/01_original_binary_3x3.png)
+![01_original_binary_3x3.png](01_original_binary_3x3.png)
 
 25х25
 
-![01_original_binary_25x25.png](output_images/01_original_binary_25x25.png)
+![01_original_binary_25x25.png](01_original_binary_25x25.png)
 
 2.2 `zhest_01_binary.png`
 
@@ -88,17 +88,17 @@ python lab2.py
 
 25х25
 
-![zhest_01_binary_25x25.png](output_images/zhest_01_binary_25x25.png)
+![zhest_01_binary_25x25.png](zhest_01_binary_25x25.png)
 
 1.3 `01_original_result.png`
 
 3х3
 
-![01_original_result_3x3.png](output_images/01_original_result_3x3.png)
+![01_original_result_3x3.png](01_original_result_3x3.png)
 
 25х25
 
-![01_original_result_25x25.png](output_images/01_original_result_25x25.png)
+![01_original_result_25x25.png](01_original_result_25x25.png)
 
 2.3 `zhest_01_result.png`
 
@@ -108,6 +108,6 @@ python lab2.py
 
 25х25
 
-![zhest_01_result_25x25.png](output_images/zhest_01_result_25x25.png)
+![zhest_01_result_25x25.png](zhest_01_result_25x25.png)
 
 
